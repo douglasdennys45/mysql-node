@@ -1,0 +1,10 @@
+# files
+.yarn.lock
+.env
+yarn-error.log
+database.json
+
+# folders
+node_modules
+.vscode
+.idea
