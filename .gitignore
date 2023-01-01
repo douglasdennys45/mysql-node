@@ -1,5 +1,4 @@
 # files
-.yarn.lock
 .env
 yarn-error.log
 database.json
