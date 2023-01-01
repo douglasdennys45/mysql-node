@@ -1,30 +1,9 @@
-import express, { Request, Response } from 'express'
-import mysql, { PoolConnection } from 'mysql2/promise'
+import 'dotenv/config'
+import './infrastructure/config/module-alias'
 
-const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  port: 3306,
-  database: 'poc',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-}
+import { MySQLConnector } from '@/infrastructure/database/mysql'
 
-const app = express()
-
-const connection = async (): Promise<PoolConnection> => {
-  const getConnection = await mysql.createPool(dbConfig)
-  return await getConnection.getConnection()
-}
-
-app.get('/', async (_: Request, res: Response) => {
-  const conn = await connection()
-  const query = 'SELECT * FROM users'
-  const [results] = await conn.query(query)
-  conn.release()
-  return res.json(results)
-})
-
-app.listen(8080, () => console.log('starting server'))
+MySQLConnector.getInstance().connect().then(async () => {
+  const { app } = await import('@/infrastructure/config/app')
+  app.listen(process.env.APP_PORT, () => console.log(`Server running at http://localhost:${process.env.APP_PORT}`))
+}).catch((err: any) => console.log(`error mongodb: ${err}`))

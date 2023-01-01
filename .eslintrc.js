@@ -12,7 +12,7 @@ module.exports = {
     project: 'tsconfig.json'
   },
   rules: {
-    '@typescript-eslint/no-misused-promises': 'off', // # Validar como remover esse carinha
-    '@typescript-eslint/consistent-type-definitions': 'off'
+    '@typescript-eslint/consistent-type-definitions': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off'
   }
 }

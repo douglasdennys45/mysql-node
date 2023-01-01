@@ -3,12 +3,24 @@ import { DbTransaction } from '@/interfaces/contracts'
 import { PoolConnection, createPool } from 'mysql2/promise'
 
 export class MySQLConnector implements DbTransaction {
+  private static instance?: MySQLConnector
   private connection?: PoolConnection
 
-  private constructor (private readonly dbConfig: any) {}
+  private constructor () {}
+
+  static getInstance (): MySQLConnector {
+    if (MySQLConnector.instance === undefined) MySQLConnector.instance = new MySQLConnector()
+    return MySQLConnector.instance
+  }
 
   async connect (): Promise<void> {
-    const getConnection = await createPool(this.dbConfig)
+    const getConnection = await createPool({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      connectionLimit: +process.env.DB_MAX_CONNECTION
+    })
     this.connection = await getConnection.getConnection()
   }
 
