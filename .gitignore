@@ -3,6 +3,7 @@
 .env
 yarn-error.log
 database.json
+yarn.*
 
 # folders
 node_modules
