@@ -1,7 +1,6 @@
-import { Request, Response } from 'express'
-
 import { HttpRequest } from '@/interfaces/contracts'
 import { Controller } from '@/interfaces/controllers'
+import { Request, Response } from 'express'
 
 export const routeAdapter = (controller: Controller) => {
   return async (req: Request, res: Response) => {
@@ -11,11 +10,8 @@ export const routeAdapter = (controller: Controller) => {
       query: req.query,
       headers: req.headers
     }
-    const httpResponse = await controller.handle(httpRequest)
-    if (httpResponse.statusCode > 299) {
-      return res.json({ error: httpResponse.error }).status(httpResponse.statusCode)
-    } else {
-      return res.json({ body: httpResponse.body }).status(httpResponse.statusCode)
-    }
+    const { statusCode, body, error } = await controller.handle(httpRequest)
+    const json = [200, 299].includes(statusCode) ? body : { error }
+    return res.status(statusCode).json(json)
   }
 }
