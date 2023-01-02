@@ -11,7 +11,7 @@ export const routeAdapter = (controller: Controller) => {
       headers: req.headers
     }
     const { statusCode, body, error } = await controller.handle(httpRequest)
-    const json = [200, 299].includes(statusCode) ? body : { error }
+    const json = [200, 299].includes(statusCode) ? { data: body } : { error }
     return res.status(statusCode).json(json)
   }
 }

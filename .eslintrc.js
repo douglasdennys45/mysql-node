@@ -12,7 +12,10 @@ module.exports = {
     project: 'tsconfig.json'
   },
   rules: {
+    '@typescript-eslint/restrict-template-expressions': 'off',
     '@typescript-eslint/consistent-type-definitions': 'off',
-    '@typescript-eslint/restrict-template-expressions': 'off'
+    '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/no-namespace': 'off',
+    'constructor-super': 'off'
   }
 }
