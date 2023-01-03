@@ -8,3 +8,4 @@ yarn.*
 node_modules
 .vscode
 .idea
+coverage
