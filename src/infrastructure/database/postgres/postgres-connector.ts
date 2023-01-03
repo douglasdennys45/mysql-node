@@ -20,11 +20,11 @@ export class PostgresConnector implements DbTransaction {
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_SCHEMA,
-      max: +process.env.DB_MAX_CONNECTION,
+      max: process.env.DB_MAX_CONNECTION ? +process.env.DB_MAX_CONNECTION : 10,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000
     })
-    this.client = await this.connection?.connect()
+    this.client = await this.connection.connect()
   }
 
   async disconnect (): Promise<void> {
@@ -35,17 +35,17 @@ export class PostgresConnector implements DbTransaction {
 
   async commit (): Promise<void> {
     this.connectionFailure()
-    await this.client?.query('COMMIT')
+    await this.connection?.query('COMMIT')
   }
 
   async rollback (): Promise<void> {
     this.connectionFailure()
-    await this.client?.query('ROLLBACK')
+    await this.connection?.query('ROLLBACK')
   }
 
   async openTransaction (): Promise<void> {
     this.connectionFailure()
-    await this.client?.query('BEGIN')
+    await this.connection?.query('BEGIN')
   }
 
   async closeTransaction (): Promise<void> {
@@ -53,13 +53,13 @@ export class PostgresConnector implements DbTransaction {
     await this.client?.release()
   }
 
-  async prepare (query: any, body: any): Promise<any> {
+  async prepare (query: string, body: any): Promise<any> {
     this.connectionFailure()
-    const { rows } = await this.client?.query({
+    const results = await this.connection?.query({
       text: query,
       values: body
     })
-    return rows
+    return results?.rows
   }
 
   private connectionFailure (): void {
