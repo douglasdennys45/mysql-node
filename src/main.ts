@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import 'reflect-metadata'
 import './infrastructure/config/module-alias'
 
 import { PostgresConnector } from '@/infrastructure/database/postgres'

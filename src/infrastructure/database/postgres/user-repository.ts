@@ -1,15 +1,9 @@
 import { AddUserRepo } from '@/domain/contracts'
-import { PostgresConnector } from './postgres-connector'
+import { PostgresRepository, PgUser } from '@/infrastructure/database/postgres'
 
-export class UserRepository implements AddUserRepo {
-  private readonly client: PostgresConnector
-
-  constructor () {
-    this.client = PostgresConnector.getInstance()
-  }
-
+export class UserRepository extends PostgresRepository implements AddUserRepo {
   async add (body: AddUserRepo.Request): Promise<AddUserRepo.Response> {
-    const [results] = await this.client.prepare('INSERT INTO users (name) VALUES ($1) RETURNING *', [body.name])
-    return results
+    const repo = this.getRepository(PgUser)
+    return await repo.save(body)
   }
 }
